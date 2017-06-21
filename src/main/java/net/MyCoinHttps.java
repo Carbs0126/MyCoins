@@ -9,12 +9,12 @@ import rx.schedulers.Schedulers;
  */
 public class MyCoinHttps {
 
-    private Api mApi;
+    private net.api.Api mApi;
 
     private static MyCoinHttps instance;
 
     private MyCoinHttps() {
-        mApi = ApiFactory.getInstance().getEbtAPI();
+        mApi = net.api.ApiFactory.getInstance().getEbtAPI();
     }
 
     public static MyCoinHttps getInstance(){
@@ -28,8 +28,16 @@ public class MyCoinHttps {
         return instance;
     }
 
-    public void getCustomerList(Subscriber<HuoBiBitcoinJson> subscriber){
-        mApi.getBitcoinPrice(BitcoinPlatforms.huobibtccny)
+    public void getBitcoinPrice(Subscriber<net.entity.HuoBiBitcoinJson> subscriber){
+        mApi.getBitcoinPrice(constants.BitcoinPlatforms.huobibtccny)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(Schedulers.trampoline())
+                .subscribe(subscriber);
+    }
+
+    public void getLitecoinPrice(Subscriber<net.entity.HuoBiBitcoinJson> subscriber){
+        mApi.getBitcoinPrice(constants.BitcoinPlatforms.huobiltccny)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(Schedulers.trampoline())
