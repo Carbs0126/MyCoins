@@ -28,6 +28,8 @@ public class MainFrame extends JFrame implements ActionListener {
     private JButton startButton;
     private JButton stopButton;
     private boolean isRunning;
+    private boolean canShowTray;
+    private TrayIcon icon;
 
     public MainFrame() {
         menuBar = new JMenuBar();
@@ -222,6 +224,7 @@ public class MainFrame extends JFrame implements ActionListener {
         frame.addContents();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        frame.showTray(false);
     }
 
     @Override
@@ -235,6 +238,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 case "tips_way":
                     break;
                 case "software_function":
+                    showTray(true);
                     break;
             }
             return;
@@ -252,6 +256,76 @@ public class MainFrame extends JFrame implements ActionListener {
                     break;
             }
             return;
+        }
+    }
+
+    private void showTray(boolean isBlink){
+        canShowTray = true;
+        try {
+            if (SystemTray.isSupported()) {// 判断系统是否托盘
+                PopupMenu menu = new PopupMenu();// 创建弹出菜单
+                MenuItem itemCancel = new MenuItem("cancel");// 创建一个菜单项
+                MenuItem itemSettings = new MenuItem("settings");
+                MenuItem itemAbout = new MenuItem("My Coins");
+                itemCancel.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        canShowTray = false;
+                    }
+                });
+                itemSettings.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+
+                    }
+                });
+                itemAbout.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+
+                    }
+                });
+                menu.add(itemCancel);// 将菜单项添加到菜单列表
+                menu.add(itemSettings);// 将菜单项添加到菜单列表
+                menu.add(itemAbout);
+                SystemTray tray = SystemTray.getSystemTray();// 获取系统托盘
+
+                Toolkit tk = Toolkit.getDefaultToolkit();
+                if (icon == null){
+                    icon = new TrayIcon(tk.createImage(Constant.UI.iconPath));
+                    icon.setImageAutoSize(true);
+                    icon.setPopupMenu(menu);
+                    tray.add(icon);
+                }
+//                icon = new TrayIcon(tk.createImage(Constant.UI.iconPath));
+//                icon.setImageAutoSize(true);
+//                icon.setPopupMenu(menu);
+//                tray.add(icon);
+//                tray.remove(icon);
+                if (isBlink) {
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            try {
+                                for (int i = 0; i < 100; i++) {
+                                    if (!canShowTray) {
+                                        break;
+                                    }
+                                    icon.setImage(tk.createImage(""));
+                                    icon.setImageAutoSize(true);
+                                    Thread.sleep(300);
+                                    icon.setImage(tk.createImage(Constant.UI.iconPath));
+                                    icon.setImageAutoSize(true);
+                                    Thread.sleep(300);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();
+                }
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
