@@ -231,8 +231,7 @@ public class MainFrame extends JFrame implements ActionListener {
         frame.addContents();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-//        frame.showTray(false);
-
+        frame.showTray(false);
 
     }
 
