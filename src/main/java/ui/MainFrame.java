@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.Enumeration;
 
 public class MainFrame extends JFrame implements ActionListener {
@@ -215,16 +216,24 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
+
         InitGlobalFont(new Font("宋体", Font.PLAIN, 12));
         MainFrame frame = new MainFrame();
         frame.setTitle("My Coins");
+        System.out.println(Constant.UI.iconPath);
+        String x = System.getProperty("user.dir") + File.separator + ".."
+                + File.separator + "resources" + File.separator + "icon" + File.separator + "coin.png";
+        System.out.println(x);
+
         frame.setIconImage(new ImageIcon(Constant.UI.iconPath).getImage());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(Constant.FrameSize.FrameWidth, Constant.FrameSize.FrameHeight);
         frame.addContents();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.showTray(false);
+//        frame.showTray(false);
+
+
     }
 
     @Override
@@ -289,6 +298,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
                 Toolkit tk = Toolkit.getDefaultToolkit();
                 if (icon == null){
+
                     icon = new TrayIcon(tk.createImage(Constant.UI.iconPath));
                     icon.setImageAutoSize(true);
                     icon.setPopupMenu(menu);
